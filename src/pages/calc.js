@@ -91,6 +91,18 @@ export default function SemesterGPACalculator() {
       },
     ]);
   };
+  const clearModule = (index) => {
+    const updatedModules = [...modules];
+    updatedModules[index] = {
+      name: updatedModules[index].name,
+      coefficient: "",
+      weightExam: "",
+      weightTd: "",
+      exam: "",
+      td: "",
+    };
+    setModules(updatedModules);
+  };
 
   return (
     <div className="p-4 mx-auto bg-gradient-to-br from-black to-blue-950 text-white min-h-screen shadow-xl space-y-6">
@@ -176,6 +188,12 @@ export default function SemesterGPACalculator() {
                     : "border-green-500 text-green-600"
                 }`}
               />
+              <button
+                onClick={() => clearModule(index)}
+                className="bg-red-500 text-white px-2 py-1 rounded-md"
+              >
+                Clear
+              </button>
               <span
                 className={`text-lg font-bold w-full md:w-20 text-center ${
                   isPassed ? "text-green-600" : "text-red-600"
