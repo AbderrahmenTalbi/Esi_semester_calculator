@@ -208,7 +208,6 @@ export default function SemesterGPACalculator() {
           </span>
         </h2>
       </div>
-      <p className="text-center mt-4 text-xl font-signature">MADE BY NOVA</p>
       <style>{`
         .no-arrows::-webkit-inner-spin-button, 
         .no-arrows::-webkit-outer-spin-button {
