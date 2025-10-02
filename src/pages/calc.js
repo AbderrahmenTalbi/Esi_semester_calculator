@@ -1,16 +1,12 @@
+"use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { PlusCircle, Calculator } from "lucide-react";
 
 export default function SemesterGPACalculator() {
   const [modules, setModules] = useState([
-    {
-      name: "",
-      coefficient: "",
-      weightExam: "",
-      weightTd: "",
-      exam: "",
-      td: "",
-    },
+    { name: "", coefficient: "", weightExam: "", weightTd: "", exam: "", td: "" },
   ]);
 
   const handleChange = (index, field, value) => {
@@ -18,16 +14,10 @@ export default function SemesterGPACalculator() {
 
     const sanitizeNumberInput = (input) => {
       if (input === "") return "";
-      const numericValue = input.replace(/[^0-9.]/g, "");
-      return numericValue;
+      return input.replace(/[^0-9.]/g, "");
     };
 
-    if (
-      field === "coefficient" ||
-      field === "weightExam" ||
-      field === "exam" ||
-      field === "td"
-    ) {
+    if (["coefficient", "weightExam", "exam", "td"].includes(field)) {
       value = sanitizeNumberInput(value);
     }
 
@@ -81,35 +71,24 @@ export default function SemesterGPACalculator() {
   const addModule = () => {
     setModules([
       ...modules,
-      {
-        name: "",
-        coefficient: "",
-        weightExam: "",
-        weightTd: "",
-        exam: "",
-        td: "",
-      },
+      { name: "", coefficient: "", weightExam: "", weightTd: "", exam: "", td: "" },
     ]);
-  };
-  const clearModule = (index) => {
-    const updatedModules = [...modules];
-    updatedModules[index] = {
-      name: updatedModules[index].name,
-      coefficient: "",
-      weightExam: "",
-      weightTd: "",
-      exam: "",
-      td: "",
-    };
-    setModules(updatedModules);
   };
 
   return (
-    <div className="p-4 mx-auto bg-gradient-to-br from-black to-blue-950 text-white min-h-screen shadow-xl space-y-6">
-      <h1 className="text-2xl md:text-3xl font-bold text-center">
-        ESI SEMESTER CALCULATOR
-      </h1>
-      <div className="space-y-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-black p-6 flex flex-col items-center text-white">
+      {/* Header */}
+      <motion.h1
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="text-3xl md:text-4xl font-extrabold tracking-wide text-center mb-8"
+      >
+        🎓 ESI Semester GPA Calculator
+      </motion.h1>
+
+      {/* Module List */}
+      <div className="w-full max-w-4xl space-y-6">
         {modules.map((module, index) => {
           const moduleAverage = calculateModuleAverage(
             module.exam,
@@ -118,17 +97,20 @@ export default function SemesterGPACalculator() {
             module.weightTd
           );
           const isPassed = moduleAverage !== "-" && Number(moduleAverage) >= 10;
+
           return (
             <motion.div
               key={index}
-              className="flex flex-col md:flex-row flex-wrap items-center gap-2 p-4 bg-white rounded-lg shadow-md text-black justify-between"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-5 grid grid-cols-2 md:grid-cols-7 gap-3 items-center"
             >
               <input
                 type="text"
-                placeholder="Module Name"
+                placeholder="Module"
                 value={module.name}
                 onChange={(e) => handleChange(index, "name", e.target.value)}
-                className="border p-2 rounded-md w-full md:w-24 text-center"
+                className="p-2 rounded-lg bg-white/90 text-black text-center placeholder:text-gray-500"
               />
               <input
                 type="number"
@@ -137,9 +119,7 @@ export default function SemesterGPACalculator() {
                 onChange={(e) =>
                   handleChange(index, "coefficient", e.target.value)
                 }
-                min="1"
-                max="5"
-                className="border p-2 rounded-md w-full md:w-14 text-center no-arrows"
+                className="p-2 rounded-lg bg-white/90 text-black text-center"
               />
               <input
                 type="number"
@@ -148,55 +128,40 @@ export default function SemesterGPACalculator() {
                 onChange={(e) =>
                   handleChange(index, "weightExam", e.target.value)
                 }
-                min="0"
-                max="100"
-                className="border p-2 rounded-md w-full md:w-20 text-center no-arrows"
+                className="p-2 rounded-lg bg-white/90 text-black text-center"
               />
               <input
                 type="text"
                 placeholder="% TD"
                 value={module.weightTd}
                 disabled
-                className="border p-2 rounded-md w-full md:w-20 text-center bg-gray-200"
+                className="p-2 rounded-lg bg-gray-200 text-center font-semibold"
               />
               <input
                 type="number"
-                step="0.01"
                 placeholder="Exam"
                 value={module.exam}
                 onChange={(e) => handleChange(index, "exam", e.target.value)}
-                min="0"
-                max="20"
-                className={`border p-2 rounded-md w-full md:w-20 text-center no-arrows ${
+                className={`p-2 rounded-lg text-center ${
                   module.exam !== "" && module.exam < 10
-                    ? "border-red-500 text-red-600"
-                    : "border-green-500 text-green-600"
+                    ? "bg-red-100 text-red-600"
+                    : "bg-green-100 text-green-700"
                 }`}
               />
-
               <input
                 type="number"
-                step="0.01"
                 placeholder="TD"
                 value={module.td}
                 onChange={(e) => handleChange(index, "td", e.target.value)}
-                min="0"
-                max="20"
-                className={`border p-2 rounded-md w-full md:w-20 text-center no-arrows ${
+                className={`p-2 rounded-lg text-center ${
                   module.td !== "" && module.td < 10
-                    ? "border-red-500 text-red-600"
-                    : "border-green-500 text-green-600"
+                    ? "bg-red-100 text-red-600"
+                    : "bg-green-100 text-green-700"
                 }`}
               />
-              <button
-                onClick={() => clearModule(index)}
-                className="bg-red-500 text-white px-2 py-1 rounded-md"
-              >
-                Clear
-              </button>
               <span
-                className={`text-lg font-bold w-full md:w-20 text-center ${
-                  isPassed ? "text-green-600" : "text-red-600"
+                className={`text-xl font-bold text-center ${
+                  isPassed ? "text-green-400" : "text-red-400"
                 }`}
               >
                 {moduleAverage}
@@ -205,18 +170,26 @@ export default function SemesterGPACalculator() {
           );
         })}
       </div>
-      {/* Add Module Button and Semester Average Section */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+
+      {/* Controls */}
+      <div className="w-full max-w-4xl flex flex-col md:flex-row justify-between items-center gap-6 mt-10">
         <button
           onClick={addModule}
-          className="bg-green-500 p-2 rounded-lg w-full md:w-auto order-2 md:order-1"
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl shadow-md transition"
         >
-          Add Module
+          <PlusCircle size={20} /> Add Module
         </button>
-        <h2 className="text-xl md:text-2xl font-semibold text-center bg-white text-black p-3 rounded-lg shadow-md w-full md:w-auto order-1 md:order-2">
-          Semester Average:{" "}
+
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white/90 text-black px-6 py-4 rounded-2xl shadow-lg flex items-center gap-3 text-xl font-semibold"
+        >
+          <Calculator className="text-indigo-600" />
+          Semester Average:
           <span
-            className={`${
+            className={`ml-2 text-2xl font-extrabold ${
               Number(calculateAverage()) >= 10
                 ? "text-green-600"
                 : "text-red-600"
@@ -224,22 +197,8 @@ export default function SemesterGPACalculator() {
           >
             {calculateAverage()}
           </span>
-        </h2>
+        </motion.div>
       </div>
-      <style>{`
-        .no-arrows::-webkit-inner-spin-button, 
-        .no-arrows::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        .no-arrows {
-          -moz-appearance: textfield;
-        }
-        .font-signature {
-          font-family: 'Dancing Script', cursive;
-          font-weight: bold;
-        }
-      `}</style>
     </div>
   );
 }
